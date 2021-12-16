@@ -1,0 +1,53 @@
+// >> START sms-notification
+using System;
+using PureCloudPlatform.Client.V2.Api;
+using PureCloudPlatform.Client.V2.Client;
+using PureCloudPlatform.Client.V2.Extensions;
+using PureCloudPlatform.Client.V2.Model;
+
+namespace csharp
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+// >> START sms-notification-step-1
+            // OAuth Credentials
+            string clientId = Environment.GetEnvironmentVariable("GENESYS_CLOUD_CLIENT_ID");
+            string clientSecret = Environment.GetEnvironmentVariable("GENESYS_CLOUD_CLIENT_SECRET");
+            // orgRegion value example: us_east_1
+            string orgRegion = Environment.GetEnvironmentVariable("GENESYS_CLOUD_REGION");
+
+            // Set Region
+            PureCloudRegionHosts region = Enum.Parse<PureCloudRegionHosts>(orgRegion);
+            Configuration.Default.ApiClient.setBasePath(region);
+// >> END sms-notification-step-1
+
+// >> START sms-notification-step-2
+            // Configure SDK Settings
+            var accessTokenInfo = Configuration.Default.ApiClient.PostToken(clientId, clientSecret);
+            string accessToken = accessTokenInfo.AccessToken;
+            PureCloudPlatform.Client.V2.Client.Configuration.Default.AccessToken = accessToken;
+// >> END sms-notification-step-2
+
+// >> START sms-notification-step-3
+            // Instantiate APIs
+            ConversationsApi conversationsApi = new ConversationsApi();
+
+            // Build request body
+            SendAgentlessOutboundMessageRequest request = new SendAgentlessOutboundMessageRequest();
+            request.FromAddress = "+13178723000";
+            request.ToAddress = "+15557655942";
+            request.ToAddressMessengerType = SendAgentlessOutboundMessageRequest.ToAddressMessengerTypeEnum.Sms;
+            request.TextBody = "Hello, this is a test notification";
+
+            // Call to PostConversationsMessagesAgentless function of Conversations API
+            SendAgentlessOutboundMessageResponse response = conversationsApi.PostConversationsMessagesAgentless(request);
+
+            // Final Output
+            Console.WriteLine(response.ToString());
+// >> END sms-notification-step-3
+        }
+    }
+}
+// >> END sms-notification
