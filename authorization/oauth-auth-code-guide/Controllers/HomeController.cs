@@ -1,4 +1,4 @@
-﻿// >> START oauth-auth-code Authorization code grant login without a client library
+// >> START oauth-auth-code Authorization code grant login without a client library
 // >> START oauth-auth-code-step-1
 using authorization_code_aspdotnet.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -38,7 +38,7 @@ namespace authorization_code_aspdotnet.Controllers
 
         public async Task<IActionResult> Index() {
             ViewData["Title"] = "Home page";
-// >> START oauth-auth-code-step-2
+            // >> START oauth-auth-code-step-2
             var authToken = GetAuthTokenFromSession();
 
             if (Request.Query.ContainsKey("code")) {
@@ -54,7 +54,7 @@ namespace authorization_code_aspdotnet.Controllers
                     Console.WriteLine(ex.StackTrace);
                 }
             }
-// >> END oauth-auth-code-step-2
+            // >> END oauth-auth-code-step-2
 
             if (string.IsNullOrEmpty(authToken)) {
                 return Redirect($"https://login.{environment}/oauth/authorize?client_id=" + clientId +
@@ -64,7 +64,7 @@ namespace authorization_code_aspdotnet.Controllers
 
             return View();
         }
-// >> START oauth-auth-code-step-3
+        // >> START oauth-auth-code-step-3
         private async Task<string> GetTokenFromCode(string code) {
             var client = new HttpClient();
             var content = new FormUrlEncodedContent(new[]
@@ -79,15 +79,15 @@ namespace authorization_code_aspdotnet.Controllers
             var token = JObject.Parse(await response.Content.ReadAsStringAsync())["access_token"].ToString();
             return token;
         }
-// >> END oauth-auth-code-step-3
-// >> START oauth-auth-code-step-4
+        // >> END oauth-auth-code-step-3
+        // >> START oauth-auth-code-step-4
         private async Task<JObject> GetUserInfo(string accessToken) {
             var client = new HttpClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             var response = await client.GetAsync($"https://api.{environment}/api/v2/users/me");
             return JObject.Parse(await response.Content.ReadAsStringAsync());
         }
-// >> END oauth-auth-code-step-4
+        // >> END oauth-auth-code-step-4
         public IActionResult Privacy() {
             return View();
         }
