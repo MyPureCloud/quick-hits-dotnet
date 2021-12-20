@@ -1,4 +1,4 @@
-﻿// >> START oauth-implicit Implicit grant login without a client library
+// >> START oauth-implicit Implicit grant login without a client library
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
